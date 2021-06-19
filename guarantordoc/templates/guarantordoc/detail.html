@@ -1,0 +1,54 @@
+{% extends 'guarantordoc/base.html' %} {% block title %} Book Details {% endblock %} {% block body %}
+{% include 'guarantordoc/header.html' %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-5">
+            <img src="http://lib1.org{{ images }}" />
+        </div>
+        <div class="col-7">
+            <table class="table table-striped table-condensed">
+                <tr>
+                    <td><h3>{{book_title |striptags|safe }}</h3></td>
+                </tr>
+                <tr>
+                    <td>{{Author |striptags| safe }}</td>
+                </tr>
+                <tr>
+                    <td>{{year |striptags|safe }}</td>
+                </tr>
+                <tr>
+                    <td>{{isbn |striptags|safe}}</td>
+                </tr>
+                <tr>
+                    <td>{{description |striptags |safe}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="#" data-author="{{Author|striptags|safe }}" data-year="{{year|striptags|safe }}" data-book_title="{{book_title|striptags|safe}}" data-book_hash="{{md5|striptags|safe }}" id="donwloadbook" class="btn btn-primary donwloadbook">Download</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<script type='text/javascript'>
+    $(function(){
+        $('#donwloadbook').click(function(){
+            var book_hash = $(this).data("book_hash");
+            $.ajax({
+                type: "GET",
+                url: "/ajax/downloadbook",
+                dataType: 'json',
+                data:{
+                    'book_id': book_hash,
+                },
+                success:function(response)
+                {
+                    console.log(response);
+                }
+            })
+        })
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'guarantordoc/base.html' %} {% block title %} Index {% endblock %}{% block body %}
+{% include 'guarantordoc/header_home.html' %}
+<div class="overlay">
+    <div class="overlay-content">
+        <div class="loader"></div>
+        <div class="loading-text"><h3>Processing</h3></div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center mt-1">Guarantors</h2>
+            <div class="row">
+	            {% if exception %}
+	                <div class="alert alert-danger col" role="alert">
+	                    {{ exception }}
+	                </div> 
+	            {% endif %}
+	            {% if messages %}
+                    {% for message in messages %}
+                        <alert {% if message.tags %} class="alert alert-danger col"{% endif %}>
+                            {{ message }}
+                        </alert>
+                    {% endfor %}
+                {% endif %}
+	        </div>
+            <table class="table table-striped" id="etable">
+            	<thead class = "alert-success">
+		            <tr>
+		                <th>Driver Name</th>
+		                <th>DRN</th>
+		                <th>Guarantor Name</th>
+		                <th>GuarantorId</th>
+		                <th>Guarantor Phone</th>
+		                <th>Guarantor Email</th>
+		                <th></th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            {% for member in guarantorlist %}
+		            <tr>
+		                <td>{{ member.drivername }}</td>
+		                <td>{{ member.drn }}</td>
+		                <td>{{ member.firstname }} {{ member.lastname }}</td>
+		                <td>{{ member.guarantorid }}</td>
+		                <td>{{ member.phone }}</td>
+		                <td>{{ member.email }}</td>
+		                {% if member.requestid == null %}
+						    <td><a href="#" class="btn btn-info sendBtn" id="sendBtn" data-guarantorid="{{member.id}}" data-guarantordrn="{{member.guarantorid}}">Send</a></td>
+					  	{% else %}
+					    	<td><a href="#" class="btn btn-success">Sent</a></td>
+					  	{% endif %}
+		            </tr>
+		           {% endfor %}
+		        </tbody>
+		    </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	
+
+</script>
+{% endblock %}
+	        

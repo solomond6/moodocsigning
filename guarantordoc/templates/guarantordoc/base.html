@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} Title {% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'guarantordoc/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'guarantordoc/css/all.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'guarantordoc/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'guarantordoc/css/jquery.dataTables.css' %}">
+    <script type="text/javascript" src="{% static 'guarantordoc/js/jquery-3.3.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'guarantordoc/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'guarantordoc/js/all.js' %}"></script>
+    <script type="text/javascript" src="{% static 'guarantordoc/js/sweetalert.min.js' %}"></script>
+</head>
+<body>
+    {% block body%} {% endblock %}
+</body>
+<script type="text/javascript" src="{% static 'guarantordoc/js/jquery.dataTables.js' %}"></script>
+<script type ="text/javascript">
+    $(document).ready(function(){
+        $('#etable').DataTable();
+        $(".overlay").hide();
+        $(document).on("click", ".sendBtn", function(){
+            $(".overlay").show();
+            var guarantordrn = $(this).attr("data-guarantordrn");
+            guarantorid = $(this).attr("data-guarantorid");
+            console.log(guarantordrn);
+            swal({
+                title: "Are you sure?",
+                text: "You want to send document to "+ guarantordrn +" for signing", 
+                icon: "warning",
+                content: {
+                    element: "input",
+                    attributes: {
+                      placeholder: "type proceed to continue",
+                      type: "text",
+                    },
+                },
+                showCancelButton: true
+            })
+            .then((inputValue) => {
+                $(".overlay").hide();
+
+                if (inputValue === "") {
+                    swal("Error!", "You need to type the proceed to continue");
+                    $(".overlay").hide();
+                    return false;
+                }else if(inputValue === "proceed"){
+                    $(".overlay").show();
+                    var url = "{% url 'gaurantordoc:psearch' guarantorid='gdid' %}";  // 'test' is just a placeholder value
+                    url = url.replace('gdid', guarantorid);  // replace 'test' with the 'selected' value
+                    window.location = url;
+                    // swal("Error!", "Guarantor's ID did not match selected");
+                    // return false
+                }else{
+                    swal("Error!", "Error typing");
+                    $(".overlay").hide();
+                    return false
+                }
+
+                //swal("Nice!", "You wrote: " + inputValue, "success");
+            });
+        });
+    });
+
+    
+</script>
+</html>

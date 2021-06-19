@@ -1,0 +1,59 @@
+{% extends 'guarantordoc/base.html' %} {% block title %} Login {% endblock %}{% block body %}
+
+<div class="container text-center">
+    <div class="row mt-5">
+        <div class="col-md-4 offset-md-4 mt-5 pb-5 text-center" style="background: #ece3e3;">
+            <img src="data:image/png;base64,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" alt="Moove Africas"/>
+            <h3 class="text-center mt-5">e-Signation For Guarantors</h3>
+            <h3>Sign-In</h3>
+            {% if form.errors %}
+                <p>Your username and password didn't match. Please try again.</p>
+            {% endif %}
+
+            {% if next %}
+                {% if user.is_authenticated %}
+                <p>Your account doesn't have access to this page. To proceed,
+                please login with an account that has access.</p>
+                {% else %}
+                <p>Please login to see this page.</p>
+                {% endif %}
+            {% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                    <alert {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                        {{ message }}
+                    </alert>
+                {% endfor %}
+            {% endif %}
+            <form action="{% url 'accounts:authview' %}" method="post" class="mt-5 text-left">
+                {% csrf_token %}
+                <div class="row">
+                    {% if exception %}
+                        <div class="alert alert-danger col" role="alert">
+                            {{ exception }}
+                        </div> 
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Username</label>
+                    <input type="text" id="username" name="username" value="" class="form-control border-primary" required="" />
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" id="password" name="password" value="" class="form-control border-primary" required="" />
+                </div>
+                <!-- <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                </div> -->
+                <div class="row mt-3">
+                    <div class="col text-left">
+                        <button type="submit" class="btn btn-primary form-control">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

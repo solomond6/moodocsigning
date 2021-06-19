@@ -1,0 +1,193 @@
+{% extends 'books/base.html' %} {% block title %} Search Result {% endblock %}{% block body %}
+{% include 'books/header.html' %}
+
+<div class="container">
+    <ul class="nav nav-tabs nav-pills nav-fill" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="lda-book-tab" data-toggle="tab" href="#ldabooktab" role="tab" aria-controls="ldabok" aria-selected="false">LDA Videos Result</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " id="lda-video-tab" data-toggle="tab" href="#ldavideotab" role="tab" aria-controls="ldavideo" aria-selected="true">LDA Books Result</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Videos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Books</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="ldabooktab" role="tabpanel" aria-labelledby="lda-book-tab">
+            {% if lda_books %}
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Document No</th>
+                        <th>Dominant Topic</th>
+                        <th>Topic Perc Contrib</th>
+                        <th>Keywords</th>
+                        <th>Text</th>
+                    </tr>
+                </thead>
+                {% for dbook in lda_books %}
+                <tr>
+                    <td>
+                        {{ dbook.Document_No }}
+                    </td>
+                    <td>{{ dbook.Dominant_Topic }}</td>
+                    <td>
+                        {{ dbook.Topic_Perc_Contrib }}
+                    </td>
+                    <td>
+                        {{ dbook.Keywords }}
+                    </td>
+                    <td>
+                        {{ dbook.Text }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+                <h2> Lda returned empty</h2>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade" id="ldavideotab" role="tabpanel" aria-labelledby="lda-video-tab">
+            {% if lda_videos %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Document No</th>
+                        <th>Dominant Topic</th>
+                        <th>Topic Perc Contrib</th>
+                        <th>Keywords</th>
+                        <th>Text</th>
+                    </tr>
+                </thead>
+                {% for dvideo in lda_videos %}
+                <tr>
+                    <td>
+                        {{ dvideo.Document_No }}
+                    </td>
+                    <td>{{ dvideo.Dominant_Topic }}</td>
+                    <td>
+                        {{ dvideo.Topic_Perc_Contrib }}
+                    </td>
+                    <td>
+                        {{ dvideo.Keywords }}
+                    </td>
+                    <td>
+                        {{ dvideo.Text }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+                <h2> Lda returned empty</h2>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="row mt-5">
+            {% if videos %}
+                {% for video in videos %}
+                <div class="col-3 mt-3">
+                  <div class="card">
+                    <img src="{{ video.img_url }}" class="card-img-top" alt="{{ video.title }}">
+                        <div class="card-body" style="height:200px;">
+                            <h5 class="card-title"><a href="https://www.youtube.com/watch?v={{video.videoid}}" target="_blank">{{ video.title | title }}</a></h5>
+                            <a href="https://www.youtube.com/watch?v={{video.videoid}}" data-videoid="{{video.videoid}}" data-video_title="{{video.title}}" class="btn btn-primary watchedVideo" id="" target="_blank">Watch</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <h2> No video was found</h2>
+            {% endif %}
+            </div>
+        </div>
+        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+            {% if data %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Pages</th>
+                        <th>File Size</th>
+                        <th>Year of Publish</th>
+                    </tr>
+                </thead>
+
+                {% for d in data %}
+
+                <tr>
+                    <td>
+                        <a href="{{ d.durl }}" data-author="{{ d.author }}" data-year="{{ d.year }}" data-book_title="{{ d.title }}" data-book_hash="{{ d.durl }}" class="" target="_blank" >{{ d.title }} </a>
+                    </td>
+                    <td>{{ d.author }}</td>
+                    <td>
+                        {{ d.pages }}
+                    </td>
+                    <td>
+                        {{ d.filesize }}
+                    </td>
+                    <td>
+                        {{ d.year }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+                <h2> No books was found</h2>
+            {% endif %}
+        </div>
+        
+    </div>
+</div>
+
+<script type='text/javascript'>
+    $(function(){
+        $('.bookpreview').click(function(){
+            var author = $(this).data("author");
+            var book_title = $(this).data("book_title");
+            var year = $(this).data("year");
+            var book_id = $(this).data("book_hash");
+            $.ajax({
+                type: "GET",
+                url: '/ajax/downloadbook',
+                dataType: 'json',
+                data:{
+                    'author': author,
+                    'book_title': book_title,
+                    'year': year,
+                    'book_id': book_id,
+                },
+                success:function(response)
+                {
+                    console.log(response);
+                }
+            })
+        })
+    });
+
+    $(function(){
+        $('#watchedVideo').click(function(){
+            var video_title = $(this).data("video_title");
+            var videoid = $(this).data("videoid");
+            $.ajax({
+                type: "GET",
+                url: '/ajax/watchedVideos',
+                dataType: 'json',
+                data:{
+                    'videoid': videoid,
+                    'video_title': video_title,
+                },
+                success:function(response)
+                {
+                    console.log(response);
+                }
+            })
+        })
+    });
+</script>
+{% endblock %}
